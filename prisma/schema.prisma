@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
@@ -48,7 +48,7 @@ model Message {
   userId         String?
   user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
   sender         MessageSender
-  body           String          @db.Text
+  body           String
   readByAdmin    Boolean         @default(false)
   readByUser     Boolean         @default(false)
   createdAt      DateTime        @default(now())
@@ -62,7 +62,7 @@ model ContentBlock {
   key       String
   label     String
   type      String   @default("text")
-  value     String   @db.Text
+  value     String
   sortOrder Int      @default(0)
   updatedAt DateTime @updatedAt
 
@@ -73,6 +73,6 @@ model ContentBlock {
 model Setting {
   id        String   @id @default(cuid())
   key       String   @unique
-  value     String   @db.Text
+  value     String
   updatedAt DateTime @updatedAt
 }

@@ -2,14 +2,18 @@
 # Build pack: Dockerfile
 # Ports Exposes: 3000
 # Domains: https://kurdistanathletes.com,https://www.kurdistanathletes.com
-# Required env:
-#   DATABASE_URL
+#
+# No separate database needed. SQLite is created automatically.
+#
+# Persistent storage (recommended):
+#   Destination: /app/data
+#
+# Optional env:
 #   NEXTAUTH_URL=https://kurdistanathletes.com
-#   NEXTAUTH_SECRET
-#   ADMIN_EMAIL
-#   ADMIN_PASSWORD
-# Persistent storage (optional but recommended):
-#   Destination: /app/public/uploads
+#   NEXTAUTH_SECRET=...
+#   ADMIN_EMAIL=admin@kurdistanathletes.com
+#   ADMIN_PASSWORD=...
+#   ADMIN_NAME=Kurdistan Athletes Admin
 
 FROM node:22-alpine AS deps
 WORKDIR /app
@@ -21,8 +25,10 @@ WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npx prisma generate
-RUN npm run build
+ENV DATABASE_URL="file:./data/build.db"
+RUN mkdir -p ./data \
+  && npx prisma generate \
+  && npm run build
 
 FROM node:22-alpine AS runner
 WORKDIR /app
@@ -30,6 +36,7 @@ ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
+ENV DATABASE_URL="file:/app/data/prod.db"
 
 RUN apk add --no-cache openssl curl
 
@@ -43,7 +50,7 @@ COPY docker-entrypoint.sh ./docker-entrypoint.sh
 
 RUN sed -i 's/\r$//' ./docker-entrypoint.sh \
   && chmod +x ./docker-entrypoint.sh \
-  && mkdir -p ./public/uploads
+  && mkdir -p ./data/uploads ./public/uploads
 
 EXPOSE 3000
 

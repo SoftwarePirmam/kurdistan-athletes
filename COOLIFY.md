@@ -1,12 +1,9 @@
 # Coolify deploy — Kurdistan Athletes
 
-## 1. Add PostgreSQL in Coolify
+No separate PostgreSQL database is required.
+The app creates and uses its own SQLite database automatically.
 
-Create a **PostgreSQL** database resource.
-
-Copy its internal `DATABASE_URL` (Coolify usually provides one).
-
-## 2. Deploy the GitHub app
+## Deploy settings
 
 - Repository: `https://github.com/SoftwarePirmam/kurdistan-athletes`
 - Build pack: **Dockerfile**
@@ -15,45 +12,48 @@ Copy its internal `DATABASE_URL` (Coolify usually provides one).
   - `https://kurdistanathletes.com`
   - `https://www.kurdistanathletes.com`
 
-### Environment variables
+## Persistent storage (important)
+
+Add one storage volume:
+
+- Destination: `/app/data`
+
+This keeps:
+- the SQLite database
+- uploaded images
+- the generated auth secret
+
+Without this volume, redeploys can reset users and uploads.
+
+## Environment variables
+
+Minimum recommended:
 
 ```env
-DATABASE_URL=postgresql://USER:PASSWORD@HOST:5432/DB?schema=public
 NEXTAUTH_URL=https://kurdistanathletes.com
-NEXTAUTH_SECRET=generate-a-long-random-string
 ADMIN_EMAIL=admin@kurdistanathletes.com
 ADMIN_PASSWORD=choose-a-strong-password
+```
+
+Optional:
+
+```env
+NEXTAUTH_SECRET=any-long-random-string
 ADMIN_NAME=Kurdistan Athletes Admin
+DATABASE_URL=file:/app/data/prod.db
 ```
 
-Generate a secret:
+If `NEXTAUTH_SECRET` is empty, the container generates and stores one in `/app/data`.
 
-```bash
-openssl rand -base64 32
-```
+## After deploy
 
-### Persistent storage (recommended)
+1. Open `https://kurdistanathletes.com`
+2. Login at `/login` with your admin email/password
+3. Use `/admin` for users, chat, and website content editing
 
-- Source / name: `uploads`
-- Destination: `/app/public/uploads`
-
-This keeps uploaded founder photos and other images after redeploys.
-
-## 3. Cloudflare
-
-Keep the same settings as before:
+## Cloudflare
 
 - Proxied A records for `@` and `www`
 - SSL/TLS: **Full** (then **Full (strict)**)
 - Always Use HTTPS: On
 - Email Address Obfuscation: Off
-
-## 4. After deploy
-
-1. Open `https://kurdistanathletes.com`
-2. Login at `/login` with `ADMIN_EMAIL` / `ADMIN_PASSWORD`
-3. Open `/admin`
-4. Edit website text/images under **Website content**
-5. Reply to users under **Messages**
-
-Users must register before they can use Contact chat.

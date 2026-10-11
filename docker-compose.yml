@@ -1,15 +1,15 @@
+# Local production-like run (optional). Coolify uses the Dockerfile alone.
 services:
-  db:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: kurdistan_athletes
+  web:
+    build: .
     ports:
-      - "5432:5432"
+      - "3000:3000"
+    environment:
+      NEXTAUTH_URL: http://localhost:3000
+      ADMIN_EMAIL: admin@kurdistanathletes.com
+      ADMIN_PASSWORD: ChangeThisPassword123!
     volumes:
-      - pgdata:/var/lib/postgresql/data
+      - app-data:/app/data
 
 volumes:
-  pgdata:
+  app-data:
