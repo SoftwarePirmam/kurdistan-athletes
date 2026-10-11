@@ -22,11 +22,16 @@ function MessagesInner() {
   const [activeId, setActiveId] = useState<string | null>(initial);
 
   const load = useCallback(async () => {
-    const response = await fetch("/api/admin/conversations", { cache: "no-store" });
-    if (!response.ok) return;
-    const data = (await response.json()) as { conversations: ConversationItem[] };
-    setConversations(data.conversations);
-    setActiveId((current) => current || data.conversations[0]?.id || null);
+    try {
+      const response = await fetch("/api/admin/conversations", { cache: "no-store" });
+      if (!response.ok) return;
+      const data = (await response.json()) as { conversations?: ConversationItem[] };
+      const next = Array.isArray(data.conversations) ? data.conversations : [];
+      setConversations(next);
+      setActiveId((current) => current || next[0]?.id || null);
+    } catch {
+      // Keep the last good list if a poll fails.
+    }
   }, []);
 
   useEffect(() => {

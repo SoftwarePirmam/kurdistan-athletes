@@ -42,17 +42,20 @@ export async function GET(_request: Request, { params }: Params) {
     data: { readByAdmin: true },
   });
 
+  const messages = conversation.messages.map((message) => ({
+    id: message.id,
+    body: message.body,
+    sender: message.sender,
+    createdAt: message.createdAt.toISOString(),
+  }));
+
   return NextResponse.json({
+    messages,
     conversation: {
       id: conversation.id,
       subject: conversation.subject,
       user: conversation.user,
-      messages: conversation.messages.map((message) => ({
-        id: message.id,
-        body: message.body,
-        sender: message.sender,
-        createdAt: message.createdAt.toISOString(),
-      })),
+      messages,
     },
   });
 }

@@ -26,10 +26,18 @@ export function ChatPanel({
   const bottomRef = useRef<HTMLDivElement | null>(null);
 
   const load = useCallback(async () => {
-    const response = await fetch(endpoint, { cache: "no-store" });
-    if (!response.ok) return;
-    const data = (await response.json()) as { messages: ChatMessage[] };
-    setMessages(data.messages);
+    try {
+      const response = await fetch(endpoint, { cache: "no-store" });
+      if (!response.ok) return;
+      const data = (await response.json()) as {
+        messages?: ChatMessage[];
+        conversation?: { messages?: ChatMessage[] };
+      };
+      const next = data.messages ?? data.conversation?.messages ?? [];
+      setMessages(Array.isArray(next) ? next : []);
+    } catch {
+      // Keep the last good thread if a poll fails.
+    }
   }, [endpoint]);
 
   useEffect(() => {
