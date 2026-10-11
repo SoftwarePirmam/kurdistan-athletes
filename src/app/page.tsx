@@ -42,8 +42,16 @@ export default async function HomePage() {
       <section className="home-paths">
         <div className="section-label">{t(c, "paths_label")}</div>
         <div className="path-grid">
-          <Link className="path-card" href="/opportunities">
+          <Link className="path-card" href="/events">
             <span>01</span>
+            <div>
+              <h3>Events</h3>
+              <p>Upcoming training days, workshops, and community gatherings.</p>
+            </div>
+            <em>See events →</em>
+          </Link>
+          <Link className="path-card" href="/opportunities">
+            <span>02</span>
             <div>
               <h3>Opportunities</h3>
               <p>Workshops, events, recognition, and ways to show what you can do.</p>
@@ -51,20 +59,12 @@ export default async function HomePage() {
             <em>Explore →</em>
           </Link>
           <Link className="path-card" href="/ways-we-help">
-            <span>02</span>
+            <span>03</span>
             <div>
               <h3>Ways We Help</h3>
               <p>Coaching connections, athlete support, and introductions that move a journey forward.</p>
             </div>
             <em>See how →</em>
-          </Link>
-          <Link className="path-card" href="/support">
-            <span>03</span>
-            <div>
-              <h3>Support the Mission</h3>
-              <p>Encourage a young athlete, mentor, or partner with the community around them.</p>
-            </div>
-            <em>Get involved →</em>
           </Link>
         </div>
       </section>

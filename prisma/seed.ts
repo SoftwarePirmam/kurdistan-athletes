@@ -163,6 +163,14 @@ const blocks: SeedBlock[] = [
   { page: "ways", key: "closing_title", label: "Closing title", value: "Want to be part of\nKurdistan Athletes?", sortOrder: 130 },
   { page: "ways", key: "closing_text", label: "Closing text", value: "Join our community and take the next step in your athletic journey.", sortOrder: 140 },
 
+  // Events
+  { page: "events", key: "hero_eyebrow", label: "Hero eyebrow", value: "WHAT'S COMING UP", sortOrder: 10 },
+  { page: "events", key: "hero_title", label: "Hero title", value: "UPCOMING\nEVENTS.", sortOrder: 20 },
+  { page: "events", key: "hero_text", label: "Hero text", value: "Training days, challenges, workshops, and community gatherings for athletes across Kurdistan.", sortOrder: 30 },
+  { page: "events", key: "list_label", label: "List label", value: "01 — UPCOMING", sortOrder: 40 },
+  { page: "events", key: "empty_text", label: "Empty state text", value: "No upcoming events are listed yet. Check back soon, or join the community to hear about the next one first.", sortOrder: 50 },
+  { page: "events", key: "past_label", label: "Past events label", value: "02 — RECENT", sortOrder: 60 },
+
   // Contact / site
   { page: "contact", key: "hero_eyebrow", label: "Hero eyebrow", value: "WE WOULD LIKE TO HEAR FROM YOU", sortOrder: 10 },
   { page: "contact", key: "hero_title", label: "Hero title", value: "GET IN\nTOUCH.", sortOrder: 20 },
@@ -204,6 +212,42 @@ async function main() {
     update: { value: "info@kurdistanathletes.com" },
     create: { key: "site_email", value: "info@kurdistanathletes.com" },
   });
+
+  const eventCount = await prisma.event.count();
+  if (eventCount === 0) {
+    const inTwoWeeks = new Date();
+    inTwoWeeks.setDate(inTwoWeeks.getDate() + 14);
+    inTwoWeeks.setHours(16, 0, 0, 0);
+
+    const inOneMonth = new Date();
+    inOneMonth.setDate(inOneMonth.getDate() + 30);
+    inOneMonth.setHours(10, 0, 0, 0);
+
+    await prisma.event.createMany({
+      data: [
+        {
+          title: "Open Training Day",
+          summary:
+            "A community training session for young athletes to meet coaches, train together, and learn what Kurdistan Athletes is about.",
+          location: "Erbil",
+          startsAt: inTwoWeeks,
+          ctaLabel: "Join Us",
+          ctaHref: "/register",
+          published: true,
+        },
+        {
+          title: "Athlete Workshop",
+          summary:
+            "A practical workshop on discipline, mindset, and how to find the next opportunity in your sport.",
+          location: "Kurdistan Region",
+          startsAt: inOneMonth,
+          ctaLabel: "Get Involved",
+          ctaHref: "/contact",
+          published: true,
+        },
+      ],
+    });
+  }
 
   const adminEmail = (process.env.ADMIN_EMAIL || "admin@kurdistanathletes.com").toLowerCase();
   const adminPassword = process.env.ADMIN_PASSWORD || "ChangeThisPassword123!";

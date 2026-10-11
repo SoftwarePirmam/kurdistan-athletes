@@ -17,6 +17,7 @@ export function SiteFooter({
       <nav className="footer-nav" aria-label="Footer">
         <Link href="/">Home</Link>
         <Link href="/about">About</Link>
+        <Link href="/events">Events</Link>
         <Link href="/opportunities">Opportunities</Link>
         <Link href="/support">Support</Link>
         <Link href="/ways-we-help">Ways We Help</Link>

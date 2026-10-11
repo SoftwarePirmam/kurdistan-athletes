@@ -76,3 +76,20 @@ model Setting {
   value     String
   updatedAt DateTime @updatedAt
 }
+
+model Event {
+  id          String    @id @default(cuid())
+  title       String
+  summary     String
+  location    String
+  startsAt    DateTime
+  endsAt      DateTime?
+  imageUrl    String?
+  ctaLabel    String?
+  ctaHref     String?
+  published   Boolean   @default(true)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@index([published, startsAt])
+}
