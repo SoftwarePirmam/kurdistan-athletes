@@ -201,31 +201,43 @@ const blocks: SeedBlock[] = [
 ];
 
 async function main() {
+  // Never overwrite admin-edited content values on redeploy.
+  // Only create missing fields, and refresh labels/order metadata.
   for (const block of blocks) {
-    await prisma.contentBlock.upsert({
+    const existing = await prisma.contentBlock.findUnique({
       where: { page_key: { page: block.page, key: block.key } },
-      update: {
-        label: block.label,
-        type: block.type ?? "text",
-        value: block.value,
-        sortOrder: block.sortOrder,
-      },
-      create: {
-        page: block.page,
-        key: block.key,
-        label: block.label,
-        type: block.type ?? "text",
-        value: block.value,
-        sortOrder: block.sortOrder,
-      },
     });
+
+    if (existing) {
+      await prisma.contentBlock.update({
+        where: { id: existing.id },
+        data: {
+          label: block.label,
+          type: block.type ?? "text",
+          sortOrder: block.sortOrder,
+        },
+      });
+    } else {
+      await prisma.contentBlock.create({
+        data: {
+          page: block.page,
+          key: block.key,
+          label: block.label,
+          type: block.type ?? "text",
+          value: block.value,
+          sortOrder: block.sortOrder,
+        },
+      });
+    }
   }
 
-  await prisma.setting.upsert({
-    where: { key: "site_email" },
-    update: { value: "info@kurdistanathletes.com" },
-    create: { key: "site_email", value: "info@kurdistanathletes.com" },
-  });
+  const emailSetting = await prisma.setting.findUnique({ where: { key: "site_email" } });
+  if (!emailSetting) {
+    await prisma.setting.create({
+      key: "site_email",
+      value: "info@kurdistanathletes.com",
+    });
+  }
 
   const eventCount = await prisma.event.count();
   if (eventCount === 0) {
@@ -267,23 +279,38 @@ async function main() {
   const adminPassword = process.env.ADMIN_PASSWORD || "ChangeThisPassword123!";
   const adminName = process.env.ADMIN_NAME || "Kurdistan Athletes Admin";
   const passwordHash = await bcrypt.hash(adminPassword, 12);
+  const forceAdminReset = process.env.FORCE_ADMIN_PASSWORD_RESET === "true";
 
-  await prisma.user.upsert({
-    where: { email: adminEmail },
-    update: {
-      name: adminName,
-      passwordHash,
-      role: Role.ADMIN,
-    },
-    create: {
-      name: adminName,
-      email: adminEmail,
-      passwordHash,
-      role: Role.ADMIN,
-    },
-  });
+  const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
+  if (!existingAdmin) {
+    await prisma.user.create({
+      data: {
+        name: adminName,
+        email: adminEmail,
+        passwordHash,
+        role: Role.ADMIN,
+      },
+    });
+    console.log(`Created admin account: ${adminEmail}`);
+  } else if (forceAdminReset) {
+    await prisma.user.update({
+      where: { email: adminEmail },
+      data: {
+        name: adminName,
+        passwordHash,
+        role: Role.ADMIN,
+      },
+    });
+    console.log(`Reset admin password for: ${adminEmail}`);
+  } else {
+    await prisma.user.update({
+      where: { email: adminEmail },
+      data: { role: Role.ADMIN },
+    });
+    console.log(`Kept existing admin account: ${adminEmail}`);
+  }
 
-  console.log(`Seed complete. Admin: ${adminEmail}`);
+  console.log("Seed complete. Existing content values were preserved.");
 }
 
 main()

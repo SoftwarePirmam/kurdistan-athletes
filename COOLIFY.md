@@ -12,18 +12,25 @@ The app creates and uses its own SQLite database automatically.
   - `https://kurdistanathletes.com`
   - `https://www.kurdistanathletes.com`
 
-## Persistent storage (important)
+## Persistent storage (required)
 
-Add one storage volume:
+Add one storage volume or admin edits will disappear on redeploy:
 
 - Destination: `/app/data`
 
 This keeps:
-- the SQLite database
-- uploaded images
+- the SQLite database (all website content, users, chats, events)
+- uploaded images (QR codes, event photos, founder photo uploads)
 - the generated auth secret
 
-Without this volume, redeploys can reset users and uploads.
+In Coolify:
+
+1. Open the application
+2. Go to **Storages** / **Persistent Storage**
+3. Add storage with destination `/app/data`
+4. Redeploy
+
+Without this volume, every redeploy starts with a fresh empty database.
 
 ## Environment variables
 
@@ -41,15 +48,20 @@ Optional:
 NEXTAUTH_SECRET=any-long-random-string
 ADMIN_NAME=Kurdistan Athletes Admin
 DATABASE_URL=file:/app/data/prod.db
+FORCE_ADMIN_PASSWORD_RESET=false
 ```
 
-If `NEXTAUTH_SECRET` is empty, the container generates and stores one in `/app/data`.
+Notes:
+- Seed no longer overwrites admin content edits on redeploy.
+- Admin password is only reset if `FORCE_ADMIN_PASSWORD_RESET=true`.
+- If `NEXTAUTH_SECRET` is empty, the container generates and stores one in `/app/data`.
 
 ## After deploy
 
-1. Open `https://kurdistanathletes.com`
-2. Login at `/login` with your admin email/password
-3. Use `/admin` for users, chat, and website content editing
+1. Confirm `/app/data` storage is attached
+2. Open `https://kurdistanathletes.com`
+3. Login at `/login`
+4. Edit content in `/admin` — changes stay after redeploy
 
 ## Cloudflare
 
