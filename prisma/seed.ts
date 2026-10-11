@@ -234,8 +234,10 @@ async function main() {
   const emailSetting = await prisma.setting.findUnique({ where: { key: "site_email" } });
   if (!emailSetting) {
     await prisma.setting.create({
-      key: "site_email",
-      value: "info@kurdistanathletes.com",
+      data: {
+        key: "site_email",
+        value: "info@kurdistanathletes.com",
+      },
     });
   }
 
