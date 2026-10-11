@@ -10,6 +10,7 @@ const links = [
   { href: "/about", label: "About" },
   { href: "/events", label: "Events" },
   { href: "/opportunities", label: "Opportunities" },
+  { href: "/donate", label: "Donate" },
   { href: "/support", label: "Support Our Mission" },
   { href: "/ways-we-help", label: "Ways We Help" },
   { href: "/contact", label: "Contact" },

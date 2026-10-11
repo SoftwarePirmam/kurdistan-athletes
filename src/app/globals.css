@@ -1751,3 +1751,68 @@ body.nav-lock {
         grid-template-columns: 1fr;
     }
 }
+
+/* ========================= DONATE ========================= */
+.donate-section {
+    align-items: stretch;
+}
+
+.donate-methods {
+    display: grid;
+    gap: 18px;
+}
+
+.donate-card {
+    padding: 32px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--white);
+    color: var(--ink);
+}
+
+.donate-card .section-label {
+    margin-bottom: 18px;
+}
+
+.donate-qr {
+    width: 100%;
+    max-width: 280px;
+    display: block;
+    margin: 0 auto 18px;
+    border-radius: 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    padding: 12px;
+    object-fit: contain;
+}
+
+.donate-qr-placeholder {
+    min-height: 220px;
+    display: grid;
+    place-items: center;
+    padding: 24px;
+    margin-bottom: 18px;
+    border: 1px dashed var(--line);
+    border-radius: 12px;
+    color: var(--soft);
+    text-align: center;
+    line-height: 1.6;
+    background: #fafafa;
+}
+
+.donate-caption,
+.donate-card > p:last-child {
+    color: var(--muted);
+    line-height: 1.7;
+}
+
+.donate-number {
+    font-family: var(--display);
+    font-size: clamp(28px, 4vw, 42px);
+    font-stretch: 90%;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--crimson);
+    margin-bottom: 14px;
+    word-break: break-word;
+}

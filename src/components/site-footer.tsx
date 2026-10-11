@@ -19,6 +19,7 @@ export function SiteFooter({
         <Link href="/about">About</Link>
         <Link href="/events">Events</Link>
         <Link href="/opportunities">Opportunities</Link>
+        <Link href="/donate">Donate</Link>
         <Link href="/support">Support</Link>
         <Link href="/ways-we-help">Ways We Help</Link>
         <Link href="/contact">Contact</Link>

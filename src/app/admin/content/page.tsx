@@ -17,6 +17,7 @@ const pages = [
   { id: "about", label: "About" },
   { id: "events", label: "Events page text" },
   { id: "opportunities", label: "Opportunities" },
+  { id: "donate", label: "Donate" },
   { id: "support", label: "Support" },
   { id: "ways", label: "Ways We Help" },
   { id: "contact", label: "Contact" },

@@ -171,6 +171,20 @@ const blocks: SeedBlock[] = [
   { page: "events", key: "empty_text", label: "Empty state text", value: "No upcoming events are listed yet. Check back soon, or join the community to hear about the next one first.", sortOrder: 50 },
   { page: "events", key: "past_label", label: "Past events label", value: "02 — RECENT", sortOrder: 60 },
 
+  // Donate
+  { page: "donate", key: "hero_eyebrow", label: "Hero eyebrow", value: "SUPPORT THE MISSION", sortOrder: 10 },
+  { page: "donate", key: "hero_title", label: "Hero title", value: "DONATE TO\nKURDISTAN ATHLETES.", sortOrder: 20 },
+  { page: "donate", key: "hero_text", label: "Hero text", value: "Your support helps young athletes find coaches, opportunities, and a community that believes in them.", sortOrder: 30 },
+  { page: "donate", key: "methods_label", label: "Methods label", value: "01 — HOW TO DONATE", sortOrder: 40 },
+  { page: "donate", key: "methods_title", label: "Methods title", value: "Give through\nFIB.", sortOrder: 50 },
+  { page: "donate", key: "methods_text", label: "Methods text", value: "Scan the QR code with your FIB app, or send your donation to the number below. After you donate, you can message us so we can thank you.", sortOrder: 60 },
+  { page: "donate", key: "qr_image", label: "FIB QR code image", type: "image", value: "", sortOrder: 70 },
+  { page: "donate", key: "qr_caption", label: "QR caption", value: "Scan with FIB to donate", sortOrder: 80 },
+  { page: "donate", key: "number_label", label: "Donation number label", value: "FIB NUMBER", sortOrder: 90 },
+  { page: "donate", key: "number_value", label: "Donation number / account", value: "Add your FIB number here", sortOrder: 100 },
+  { page: "donate", key: "number_note", label: "Number note", value: "Send your donation through FIB, then contact us if you want a confirmation.", sortOrder: 110 },
+  { page: "donate", key: "cta_label", label: "Contact button label", value: "Message us after donating", sortOrder: 120 },
+
   // Contact / site
   { page: "contact", key: "hero_eyebrow", label: "Hero eyebrow", value: "WE WOULD LIKE TO HEAR FROM YOU", sortOrder: 10 },
   { page: "contact", key: "hero_title", label: "Hero title", value: "GET IN\nTOUCH.", sortOrder: 20 },
