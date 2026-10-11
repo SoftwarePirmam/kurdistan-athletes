@@ -1,0 +1,78 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  ADMIN
+}
+
+enum MessageSender {
+  USER
+  ADMIN
+}
+
+model User {
+  id           String    @id @default(cuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         Role      @default(USER)
+  lastSeenAt   DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  messages     Message[]
+  conversations Conversation[] @relation("ConversationUser")
+}
+
+model Conversation {
+  id            String    @id @default(cuid())
+  userId        String    @unique
+  user          User      @relation("ConversationUser", fields: [userId], references: [id], onDelete: Cascade)
+  subject       String    @default("General inquiry")
+  lastMessageAt DateTime  @default(now())
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  messages      Message[]
+}
+
+model Message {
+  id             String          @id @default(cuid())
+  conversationId String
+  conversation   Conversation    @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String?
+  user           User?           @relation(fields: [userId], references: [id], onDelete: SetNull)
+  sender         MessageSender
+  body           String          @db.Text
+  readByAdmin    Boolean         @default(false)
+  readByUser     Boolean         @default(false)
+  createdAt      DateTime        @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+model ContentBlock {
+  id        String   @id @default(cuid())
+  page      String
+  key       String
+  label     String
+  type      String   @default("text")
+  value     String   @db.Text
+  sortOrder Int      @default(0)
+  updatedAt DateTime @updatedAt
+
+  @@unique([page, key])
+  @@index([page, sortOrder])
+}
+
+model Setting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String   @db.Text
+  updatedAt DateTime @updatedAt
+}

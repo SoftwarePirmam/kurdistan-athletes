@@ -1,8 +1,29 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+
+# next
+.next
+out
+build
+dist
+
+# env
+.env
+.env.local
+.env.*.local
+
+# uploads (keep folder, ignore files)
+public/uploads/*
+!public/uploads/.gitkeep
+
+# misc
 .DS_Store
 Thumbs.db
 *.log
-.env
-.env.*
-!.env.example
 .vscode/
 .idea/
+npm-debug.log*
+.vercel
+_legacy/
