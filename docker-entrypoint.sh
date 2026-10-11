@@ -1,13 +1,11 @@
 #!/bin/sh
 set -e
 
-mkdir -p /app/data/uploads
+mkdir -p /app/data/uploads /app/public
 
-# Keep uploads on the same persistent volume as the database
-if [ ! -L /app/public/uploads ]; then
-  rm -rf /app/public/uploads
-  ln -sfn /app/data/uploads /app/public/uploads
-fi
+# Always point public/uploads at the persistent volume.
+rm -rf /app/public/uploads
+ln -sfn /app/data/uploads /app/public/uploads
 
 export DATABASE_URL="${DATABASE_URL:-file:/app/data/prod.db}"
 export NEXTAUTH_URL="${NEXTAUTH_URL:-https://kurdistanathletes.com}"
@@ -24,6 +22,9 @@ if [ -z "$NEXTAUTH_SECRET" ]; then
   fi
   export NEXTAUTH_SECRET
 fi
+
+echo "Upload dir: /app/data/uploads"
+ls -la /app/data/uploads || true
 
 echo "Preparing SQLite database at $DATABASE_URL ..."
 npx prisma db push

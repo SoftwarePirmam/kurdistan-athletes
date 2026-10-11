@@ -1,9 +1,10 @@
 import { randomUUID } from "crypto";
-import { mkdir, writeFile } from "fs/promises";
+import { writeFile } from "fs/promises";
 import path from "path";
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdmin } from "@/lib/session";
+import { ensureUploadDir } from "@/lib/uploads";
 
 export async function POST(request: Request) {
   const session = await requireAdmin();
@@ -33,21 +34,9 @@ export async function POST(request: Request) {
     : "jpg";
   const filename = `${randomUUID()}.${safeExt}`;
 
-  // Prefer persistent data volume path used in production.
-  const uploadDir = path.join(process.cwd(), "data", "uploads");
-  await mkdir(uploadDir, { recursive: true });
-
+  const uploadDir = await ensureUploadDir();
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(path.join(uploadDir, filename), buffer);
-
-  // Also write into public/uploads when it is a real directory (local/dev).
-  const publicUploads = path.join(process.cwd(), "public", "uploads");
-  try {
-    await mkdir(publicUploads, { recursive: true });
-    await writeFile(path.join(publicUploads, filename), buffer);
-  } catch {
-    // Symlinked production uploads already point at /app/data/uploads.
-  }
 
   const publicPath = `/uploads/${filename}`;
 
