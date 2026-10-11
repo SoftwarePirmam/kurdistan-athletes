@@ -15,8 +15,8 @@ export async function POST(request: Request) {
   const file = form.get("file");
   const blockId = String(form.get("blockId") || "");
 
-  if (!(file instanceof File) || !blockId) {
-    return NextResponse.json({ error: "Missing file or block." }, { status: 400 });
+  if (!(file instanceof File)) {
+    return NextResponse.json({ error: "Missing image file." }, { status: 400 });
   }
 
   if (!file.type.startsWith("image/")) {
@@ -32,18 +32,31 @@ export async function POST(request: Request) {
     ? extension
     : "jpg";
   const filename = `${randomUUID()}.${safeExt}`;
-  const uploadDir = path.join(process.cwd(), "public", "uploads");
+
+  // Prefer persistent data volume path used in production.
+  const uploadDir = path.join(process.cwd(), "data", "uploads");
   await mkdir(uploadDir, { recursive: true });
 
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(path.join(uploadDir, filename), buffer);
 
+  // Also write into public/uploads when it is a real directory (local/dev).
+  const publicUploads = path.join(process.cwd(), "public", "uploads");
+  try {
+    await mkdir(publicUploads, { recursive: true });
+    await writeFile(path.join(publicUploads, filename), buffer);
+  } catch {
+    // Symlinked production uploads already point at /app/data/uploads.
+  }
+
   const publicPath = `/uploads/${filename}`;
 
-  await prisma.contentBlock.update({
-    where: { id: blockId },
-    data: { value: publicPath },
-  });
+  if (blockId) {
+    await prisma.contentBlock.update({
+      where: { id: blockId },
+      data: { value: publicPath },
+    });
+  }
 
   return NextResponse.json({ path: publicPath });
 }

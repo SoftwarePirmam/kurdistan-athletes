@@ -35,6 +35,7 @@ export default function AdminEventsPage() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [status, setStatus] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploading, setUploading] = useState(false);
 
   const load = useCallback(async () => {
     const response = await fetch("/api/admin/events", { cache: "no-store" });
@@ -123,6 +124,33 @@ export default function AdminEventsPage() {
     await load();
   }
 
+  async function onUploadImage(file: File | null) {
+    if (!file) return;
+
+    setUploading(true);
+    setStatus("Uploading picture...");
+
+    const body = new FormData();
+    body.append("file", file);
+
+    const response = await fetch("/api/admin/upload", {
+      method: "POST",
+      body,
+    });
+
+    setUploading(false);
+
+    if (!response.ok) {
+      const data = (await response.json().catch(() => null)) as { error?: string } | null;
+      setStatus(data?.error || "Could not upload picture.");
+      return;
+    }
+
+    const data = (await response.json()) as { path: string };
+    setForm((current) => ({ ...current, imageUrl: data.path }));
+    setStatus("Picture uploaded. Save the event to keep it.");
+  }
+
   return (
     <AdminShell
       title="Events"
@@ -171,13 +199,34 @@ export default function AdminEventsPage() {
             onChange={(e) => setForm((current) => ({ ...current, endsAt: e.target.value }))}
           />
 
-          <label htmlFor="imageUrl">Image URL (optional)</label>
+          <label htmlFor="eventImage">Event picture</label>
+          {form.imageUrl ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img className="content-preview" src={form.imageUrl} alt="Event preview" />
+          ) : null}
+          <input
+            id="eventImage"
+            type="file"
+            accept="image/*"
+            disabled={uploading}
+            onChange={(e) => void onUploadImage(e.target.files?.[0] || null)}
+          />
+          <label htmlFor="imageUrl">Or image URL</label>
           <input
             id="imageUrl"
             value={form.imageUrl}
             onChange={(e) => setForm((current) => ({ ...current, imageUrl: e.target.value }))}
             placeholder="/uploads/event.jpg"
           />
+          {form.imageUrl ? (
+            <button
+              type="button"
+              className="card-link"
+              onClick={() => setForm((current) => ({ ...current, imageUrl: "" }))}
+            >
+              Remove picture
+            </button>
+          ) : null}
 
           <label htmlFor="ctaLabel">Button label (optional)</label>
           <input
