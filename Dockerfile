@@ -18,7 +18,8 @@
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json* ./
-RUN npm install
+# Skip postinstall here — prisma schema is copied in the builder stage.
+RUN npm install --ignore-scripts
 
 FROM node:22-alpine AS builder
 WORKDIR /app
