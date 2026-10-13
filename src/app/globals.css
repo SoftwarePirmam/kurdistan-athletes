@@ -723,6 +723,12 @@ body.nav-lock {
     color: var(--ink);
 }
 
+.instagram-icon {
+    width: 22px;
+    height: 22px;
+    flex-shrink: 0;
+}
+
 .footer-nav {
     display: flex;
     flex-wrap: wrap;
