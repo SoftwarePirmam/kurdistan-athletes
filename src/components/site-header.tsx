@@ -25,8 +25,8 @@ export function SiteHeader({ brand }: { brand: string }) {
 
   return (
     <header className="navbar">
-      <Link className="logo" href="/" onClick={close}>
-        {brand}
+      <Link className="logo" href="/" onClick={close} aria-label={brand}>
+        <img src="/images/logo-nav.png" alt={brand} className="logo-image" />
       </Link>
 
       <nav className={open ? "is-open" : undefined} aria-label="Primary">

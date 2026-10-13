@@ -83,6 +83,16 @@ export default async function AboutPage() {
           <RichTitle as="h2" value={t(c, "founder_title")} />
           <p>{t(c, "founder_p1")}</p>
           <p>{t(c, "founder_p2")}</p>
+          {t(c, "founder_instagram") ? (
+            <a
+              className="founder-social"
+              href={`https://instagram.com/${t(c, "founder_instagram")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram @{t(c, "founder_instagram")}
+            </a>
+          ) : null}
           <Link href="/contact" className="secondary-btn">
             Get In Touch
           </Link>

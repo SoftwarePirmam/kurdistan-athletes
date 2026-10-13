@@ -11,8 +11,8 @@ export function SiteFooter({
 }) {
   return (
     <footer className="footer">
-      <Link className="logo" href="/">
-        {brand}
+      <Link className="logo footer-brand" href="/" aria-label={brand}>
+        <img src="/images/logo-nav.png" alt={brand} className="logo-image" />
       </Link>
       <nav className="footer-nav" aria-label="Footer">
         <Link href="/">Home</Link>

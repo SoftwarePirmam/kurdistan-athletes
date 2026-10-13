@@ -77,6 +77,7 @@ const blocks: SeedBlock[] = [
     sortOrder: 230,
   },
   { page: "about", key: "founder_image", label: "Founder image path", type: "image", value: "/images/founder.jpg", sortOrder: 240 },
+  { page: "about", key: "founder_instagram", label: "Founder Instagram username", value: "zhwan_ali9", sortOrder: 245 },
   { page: "about", key: "closing_eyebrow", label: "Closing eyebrow", value: "THIS IS JUST THE BEGINNING", sortOrder: 250 },
   { page: "about", key: "closing_title", label: "Closing title", value: "Your dream deserves\na chance.", sortOrder: 260 },
   { page: "about", key: "closing_text", label: "Closing text", value: "Whether you're an athlete, coach, supporter, or someone discovering your passion for sport, there is a place for you here.", sortOrder: 270 },

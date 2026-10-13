@@ -105,6 +105,16 @@ select:focus-visible {
     letter-spacing: 0.06em;
     text-decoration: none;
     white-space: nowrap;
+    display: inline-flex;
+    align-items: center;
+    line-height: 0;
+}
+
+.logo-image {
+    height: 58px;
+    width: auto;
+    display: block;
+    object-fit: contain;
 }
 
 .navbar nav {
@@ -690,6 +700,27 @@ body.nav-lock {
 
 .footer .logo {
     margin-bottom: 8px;
+    justify-content: center;
+}
+
+.footer .logo-image {
+    height: 72px;
+    margin: 0 auto;
+}
+
+.founder-social {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin: 8px 0 18px;
+    color: var(--crimson);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.founder-social:hover {
+    color: var(--ink);
 }
 
 .footer-nav {
@@ -1242,6 +1273,10 @@ body.nav-lock {
     .logo {
         font-size: 14px;
         letter-spacing: 0.04em;
+    }
+
+    .logo-image {
+        height: 46px;
     }
 
     .join-btn {
